@@ -1,13 +1,203 @@
 \documentclass[11pt]{jsarticle}
 
-\title{猿でもわかるgnuplot} % 文書の題名
+\title{猿でもわかるgnuplot\\
+研究室配属されてすぐにグラフを描くために} % 文書の題名
 \author{coffee\_pote}    % 文書作成者
 \date{\today}        % 日付
 
 \begin{document}
 \maketitle
 
-目次は書いたので、そのうちcommitします。
+\tableofcontents　　　　　　%目次
+\newpage
+
+% 目次は書いたので、そのうちcommitします。
+
+\section{はじめに}
+この本のターゲットはタイトルの通り、研究室配属されたばかりの4年生
+gnuplotを使ったことがなく、まず環境設定すらできていないことを想定している
+
+cdとかlsといったコマンドラインについてはこの本ではあまり触れないので、他のページを参考にしてください
+
+\section{gnuplotとは}
+・gnuplotとは
+
+\subsection{こんなことができる}
+
+・どんなことができるかのデモンストレーションを見せる
+　demoを元にして
+
+\section{インストールしてみる}
+
+・環境設定 port、fink、homebrew他でインストールする
+
+\section{グラフを描いてみる}
+
+
+\subsection{まずはplotから}
+
+・まずはplotから
+　グラフを重ね書きするには2種類の方法がある
+　plot sin(x), cos(x)
+または
+　plot sin(x)
+ replot cos(x)
+
+\subsection{データをプロットしてみる}
+・データをプロットしてみる
+　自分で作ってもいいし、何か面白いデータがダウンロードしてきても良い
+　実験系の研究室だと何かの測定データを自分で測定して、プロットし、そしてfittingすることもあるだろう(fittingは後述)
+
+\subsection{複数のデータを重ね書きしてみる}
+・複数のデータをプロットする
+　重ね書き
+　multiplot(一気に論文でも使えるグラフになる)
+
+\subsection{グラフを保存してみる}
+・グラフを保存するためには
+　png, jpeg, eps(postscript), pdf, gif
+　(gifアニメも作れるということをおまけで説明する)
+　どういう保存形式があるかはset terminalで確認できる
+・実はほとんどのコマンドが省略できるということを付け加える
+
+\subsection{プロットのスタイルについて}
+・プロットするスタイルについて
+plot "hoge.txt" w l
+plot "hoge.txt" w p
+plot "hoge.txt" w lp
+gnuplot v5.0から増えた点線のオプションについても触れる
+
+これらがどういう風に見えるかは
+set term png
+set output "hoge.png"
+test
+で確認できる
+
+一度よく使うterminalでtestを出力して、印刷して常に手元においておくのが良いだろう
+
+色合いについて
+以前はプロットしたデータごとに順番に赤、緑、青、・・・のように色が付いて行った
+実は緑色、黄色の線というのは白地の上ではとても見にくい
+たいがいの研究者のスライドは背景が白色なので、黄色や緑色のプロットは相性が悪い・・・
+背景が黒色ならもっと別の工夫が必要なので今回は触れない
+
+で、gnuplot v5.0以降では使用される色が変わった
+test.pngのように、紫、緑、青、黄色・・・
+特に嫌いではないけど、変更する方法もまとめておく
+
+
+\subsection{グラフのコスメ}
+・プロットしたグラフのコスメ
+割と細かく書いているので読み飛ばしてもらっても構わない
+困ったらここに戻ってくる感じで(ここに書いてなかったらググる感じで)
+
+これらのコスメのためのコマンドは打つだけではグラフには反映されないので
+% replot
+とすること
+
+ここも参考にして書く
+http://coffee.guhaw.com/Entry/59/
+
+set title "hogehoge"
+
+set xlabel "hoge"
+set ylabel "hoge"
+
+plot "hoge.txt" title "this is title"
+
+set xrange
+set yrange
+
+set key bottom left
+legendとも言う
+背景を透明にするには
+http://coffee.guhaw.com/Entry/478/
+keyの行間を調節するには
+http://coffee.guhaw.com/Entry/346/
+keyを消したいときは
+plot sin(x) notitle
+
+
+plot [0:2][:5] "hoge.txt"
+plot [a:b] [c:d] "hoge.dat"これで、x軸の表示はaからb, y軸の表示はcからdとなる。
+もしy軸の最小値のみを指定したい場合は他のところを空白にして
+
+この指定方法の方がset xrange [0:2]より便利なときは、multiplotなどを使っているとき
+2枚目のグラフでは[-2:2]のように別の範囲を指定したいとき、set xrange[-2:2]ともう一行追加する必要がなくなるので楽かも
+範囲指定を自動でやりたいときは
+http://coffee.guhaw.com/Entry/264/
+
+X軸の刻み幅をこちらで指定したいとき
+http://coffee.guhaw.com/Entry/486/
+
+細かいグリッド線をひくときは
+http://coffee.guhaw.com/Entry/263/
+
+
+例えばX軸の値がGPS時刻などで横の値と被ってしまうときは
+値を少し回転させればうまく折り合いがつく
+http://coffee.guhaw.com/Entry/426/
+
+
+\subsection{データのfittingをしてみる}
+・データのfitting方法
+http://coffee.guhaw.com/Entry/429/
+
+
+\subsection{gnuplotの設定ファイルと履歴ファイル}
+・gnuplotの設定ファイルと履歴ファイル
+gnuplotを起動してここまでのようなプロットをしていくと
+%~/.gnuplot_history
+が残っているはず
+gnuplotを終了して、
+% tail ~/.gnuplot_history
+とかで内容をチェックしてみる
+tailの説明
+
+また、
+%~/.gnuplot
+は設定ファイル
+gnuplotが起動されたときに一度これらが実行されてから、こちらのコマンド入力を受け付けるようになる
+自分の場合はset gridなどはいつでも書いてほしいのでここにすでに書いてある
+自分の設定ファイルをここに貼付けておく
+pngのデフォルトのサイズを変更したい
+http://coffee.guhaw.com/Entry/233/
+
+
+\subsection{コマンドをいちいち打たずにグラフを書くには}
+・コマンドをいちいち打たずにグラフを書くには
+% tail -5 ~/.gnuplot_history > hoge.plt
+% gnuplot hoge.plt
+これでエラーが出なければ、何かのグラフ作成が行われているはず
+
+% gnuplot --persis hoge.plt
+とかも説明する
+
+
+\section{さらにgnuplotを使いこなすには}
+・さらなるgnuplot使いになるためには
+素晴らしき公式document
+日本語版も有志によって用意されているが、まだgnuplot v4.6
+gnuplot v5.0で追加された新機能を使わなければこれで十分か
+
+グーグル先生にお願いする
+「gnuplot ~~~したい」でたいがいの問題は解決するだろう
+しない場合は質問の仕方が悪いと思うので工夫されたし
+
+新潟の大学
+(知らない間にうちのブログにリンクを貼ってくれていた 感謝)
+http://takeno.iee.niit.ac.jp/~foo/gp-jman/gp-jman.html
+
+米澤
+http://www.ss.scphys.kyoto-u.ac.jp/person/yonezawa/contents/program/gnuplot/
+
+ここにあるリンクを貼っておく
+いつが最終更新日かも書いておく
+リンク切れの際はすいませんがご一報ください
+http://coffee.guhaw.com/Entry/277/
+
+
+
 
 
 \end{document}
