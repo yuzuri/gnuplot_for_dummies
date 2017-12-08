@@ -1,66 +1,171 @@
-\documentclass[11pt]{jsarticle}
+\documentclass[12pt,a4paper]{jarticle}
 
-\title{猿でもわかるgnuplot\\
-研究室配属されてすぐにグラフを描くために} % 文書の題名
-\author{coffee\_pote}    % 文書作成者
-\date{\today}        % 日付
+\setlength{\headsep}{-20pt}
+%\setlength{\topmargin}{-10mm}
+%\setlength{\footmargin}{-10mm}
+%\setlength{\footskip}{0mm}
+\setlength{\topmargin}{00mm} %上マージン　20mm
+%\addtolength{\topmargin}{-1in} % 標準のマージン(1inch)を引く
+\setlength{\textheight}{242mm}%本文の長さ　(縦) 297-(20+25)= 252
+
+\setlength{\oddsidemargin}{15mm} % 奇数ページ左マージン10mm
+\addtolength{\oddsidemargin}{-1in} % 奇数ページ標準のマージン(1inch)を引く
+\setlength{\evensidemargin}{15mm}% 偶数ページ左マージン10mm
+\addtolength{\evensidemargin}{-1in}% 偶数ページ標準のマージン(1inch)を引く
+\setlength{\textwidth}{175mm}%本文の長さ(横) 210 -(20+15) = 175
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{mathrsfs}
+\usepackage[dvips,dvipdfmx]{graphicx}
+\usepackage[dvipdfmx]{hyperref}
+\usepackage{fancybox}
+\usepackage{ascmac}
+\usepackage{float}
+\usepackage{graphicx,here}
+\usepackage[square, sort,comma,numbers]{natbib}
+\usepackage{url}
 
 \begin{document}
-\maketitle
 
+\title{猿でもわかるgnuplot\\
+研究室配属されてすぐにグラフを描くために}
+\author{@coffee\_pote} 
+\date{\today}
+\西暦
+
+\maketitle
 \tableofcontents　　　　　　%目次
 \newpage
 
 % 目次は書いたので、そのうちcommitします。
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{はじめに}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 この本のターゲットはタイトルの通り、研究室配属されたばかりの4年生
 gnuplotを使ったことがなく、まず環境設定すらできていないことを想定している
 
 cdとかlsといったコマンドラインについてはこの本ではあまり触れないので、他のページを参考にしてください
 
+ここで具体的な参考になるサイトを挙げておく
+とらりもん\url{http://pen.agbi.tsukuba.ac.jp/~torarimon/}
+の中にある
+\url{http://pen.agbi.tsukuba.ac.jp/~torarimon/?Unix%2FLinux%C6%FE%CC%E7}
+が良さそう
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{gnuplotとは}
-・gnuplotとは
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+gnuplotとは無償で使えるグラフ描画ツールで、こんな感じの図が描ける。
 
-\subsection{こんなことができる}
+\url{http://gnuplot.sourceforge.net/demo_5.0/}
+から良さそうな図を持ってくる。3Dのものも描けるということがアピールポイントか
 
-・どんなことができるかのデモンストレーションを見せる
-　demoを元にして
 
+もっと頑張るとこんなこともできる
+最近見つけたページをリンクしておく
+\url{http://slpr.sakura.ne.jp/qp/gnuplot-animation/}
+
+と言っても、これはgifアニメだからここに貼れないか・・・・
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{インストールしてみる}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+はじめに、このドキュメントではすべての端末(Mac, Windows, Linux,$\cdots$)でgnuplotをインストールすることまで網羅できません。
+なので一例として、Macを使ってる人がmacportsを使ってgnuplotをインストールする手順を書いておきます。
+Macのversionやmacportsのversionによって手続きが異なるかもしれませんが、
+もしも本当に困ったときは引き出しにgoogle先生を置いておくのであてにしてください。
 
-・環境設定 port、fink、homebrew他でインストールする
+インストールができたら、本当に動くのかどうかテストをしてみる。
+PATHが通っているかどうかの問題があるので、terminalの再起動を一度する(またはrehashとコマンドと入力する)。その後で、
+\begin{screen}
+\begin{verbatim}
+> cd /opt/local/share/doc/gnuplot/demo
+> gnuplot 
+\end{verbatim}
+\end{screen}
+これでPATHが通っていれば次のような画面が出てくるはず(細かい数字などはversionによって違うので気にしない)
+\begin{screen}
+\begin{verbatim}
+        G N U P L O T
+        Version 5.0 patchlevel 3    last modified 2016-02-21
 
+        Copyright (C) 1986-1993, 1998, 2004, 2007-2016
+        Thomas Williams, Colin Kelley and many others
+
+        gnuplot home:     http://www.gnuplot.info
+        faq, bugs, etc:   type "help FAQ"
+        immediate help:   type "help"  (plot window: hit 'h')
+\end{verbatim}
+\end{screen}
+きちんと描画する環境が整っているかは次のデモを動かすことでチェックできる。
+macports以外でインストールした場合は別のディレクトリなので、エラーが出て動きません。
+\begin{screen}
+\begin{verbatim}
+load "/opt/local/share/doc/gnuplot/demo/all.dem"
+\end{verbatim}
+\end{screen}
+何かプロットが画面に出れば成功、
+これで研究生活の準備が1つ整った。
+エンターを押せばどんどん次のデモが表示される。control+cで終了させられる。
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{グラフを描いてみる}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+gnuplotを動かす環境が整ったのでいよいよグラフを書いていく
 
-
-\subsection{まずはplotから}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{まずplotありき}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{screen}
+\begin{verbatim}
+	plot [何かプロットさせたい関数]
+\end{verbatim}
+\end{screen}
 
 ・まずはplotから
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{測定データをプロットしてみる}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+・データをプロットしてみる
+　自分で作ってもいいし、何か面白いデータがダウンロードしてきても良い
+　実験系の研究室だと何かの測定データを自分で測定して、プロットし、そしてfittingすることもあるだろう(fittingは後述)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{複数のデータを重ね書きしてみる}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+・複数のデータをプロットする
+　重ね書き
+　multiplot(一気に論文でも使えるグラフになる)
+
+重ね書きはこっち
+
 　グラフを重ね書きするには2種類の方法がある
 　plot sin(x), cos(x)
 または
 　plot sin(x)
  replot cos(x)
 
-\subsection{データをプロットしてみる}
-・データをプロットしてみる
-　自分で作ってもいいし、何か面白いデータがダウンロードしてきても良い
-　実験系の研究室だと何かの測定データを自分で測定して、プロットし、そしてfittingすることもあるだろう(fittingは後述)
 
-\subsection{複数のデータを重ね書きしてみる}
-・複数のデータをプロットする
-　重ね書き
-　multiplot(一気に論文でも使えるグラフになる)
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{グラフを保存してみる}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ・グラフを保存するためには
 　png, jpeg, eps(postscript), pdf, gif
 　(gifアニメも作れるということをおまけで説明する)
 　どういう保存形式があるかはset terminalで確認できる
 ・実はほとんどのコマンドが省略できるということを付け加える
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{プロットのスタイルについて}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ・プロットするスタイルについて
 plot "hoge.txt" w l
 plot "hoge.txt" w p
@@ -85,8 +190,9 @@ test
 test.pngのように、紫、緑、青、黄色・・・
 特に嫌いではないけど、変更する方法もまとめておく
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{グラフのコスメ}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ・プロットしたグラフのコスメ
 割と細かく書いているので読み飛ばしてもらっても構わない
 困ったらここに戻ってくる感じで(ここに書いてなかったらググる感じで)
@@ -138,13 +244,15 @@ http://coffee.guhaw.com/Entry/263/
 値を少し回転させればうまく折り合いがつく
 http://coffee.guhaw.com/Entry/426/
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{データのfittingをしてみる}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ・データのfitting方法
 http://coffee.guhaw.com/Entry/429/
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{gnuplotの設定ファイルと履歴ファイル}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ・gnuplotの設定ファイルと履歴ファイル
 gnuplotを起動してここまでのようなプロットをしていくと
 %~/.gnuplot_history
@@ -164,7 +272,9 @@ pngのデフォルトのサイズを変更したい
 http://coffee.guhaw.com/Entry/233/
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{コマンドをいちいち打たずにグラフを書くには}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ・コマンドをいちいち打たずにグラフを書くには
 % tail -5 ~/.gnuplot_history > hoge.plt
 % gnuplot hoge.plt
@@ -173,8 +283,9 @@ http://coffee.guhaw.com/Entry/233/
 % gnuplot --persis hoge.plt
 とかも説明する
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{さらにgnuplotを使いこなすには}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ・さらなるgnuplot使いになるためには
 素晴らしき公式document
 日本語版も有志によって用意されているが、まだgnuplot v4.6
